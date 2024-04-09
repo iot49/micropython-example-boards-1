@@ -39,8 +39,7 @@ jobs:
           target: esp32s3
           # path: 'boards/ESP32_S3_WROOM_1_N16R8'
           path: ${{ env.BOARD_DIR }}
-          # command: 'make -C ../../lib/micropython/ports/esp32 submodules && idf.py build'
-          command: make -C ${{ env.PORT_DIR }} submodules && idf.py build
+          command: 'make -C ../../lib/micropython/ports/esp32 submodules && idf.py build'
 
       - name: Set up Python
         uses: actions/setup-python@v2
