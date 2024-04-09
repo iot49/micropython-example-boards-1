@@ -5,8 +5,6 @@ cmake_minimum_required(VERSION 3.12)
 
 # Set the location of MicroPython, the esp32 port, and the board directory.
 get_filename_component(PROJECT_DIR "../.." ABSOLUTE)
-#get_filename_component(MICROPY_TOP "../../lib/micropython" ABSOLUTE)
-#set(MICROPY_PORT_DIR ${MICROPY_TOP}/ports/esp32)
 set(MICROPY_PORT_DIR ${PROJECT_DIR}/lib/micropython/ports/esp32)
 get_filename_component(MICROPY_BOARD_DIR "." ABSOLUTE)
 
@@ -28,3 +26,4 @@ set(SDKCONFIG_DEFAULTS ${CMAKE_BINARY_DIR}/sdkconfig.combined)
 # Include main IDF cmake file and define the project.
 include($ENV{IDF_PATH}/tools/cmake/project.cmake)
 project(micropython)
+

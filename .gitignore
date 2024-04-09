@@ -1,0 +1,14 @@
+**/build/**
+boards/**/managed_components/**
+boards/**/dependencies.lock
+src/freeze/**
+**/backup/**
+lib/micropython/**
+
+.DS_Store
+.vscode
+.coverage
+.venv/
+.pytest_cache/
+__pycache__/
+_build/

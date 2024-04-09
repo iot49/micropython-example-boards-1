@@ -1,0 +1,85 @@
+name: Compile MicroPython for boards/esp32_s3_wroom_1_n16r8.yml
+
+on:
+  push:
+    branches:
+      - main
+    tags:
+      - '*'
+
+permissions:
+  contents: write
+      
+jobs:
+    build:
+      runs-on: ubuntu-latest
+  
+      env:
+        BOARD: ESP32_S3_WROOM_1_N16R8
+        BOARD_DIR: boards/${BOARD}
+        BUILD_DIR: ${BOARD_DIR}/build
+        PORT_DIR: lib/micropython/ports/esp32
+  
+      steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+        with:
+          # submodules: 'recursive' is inefficient, as it checks out many submodules we don't need
+          submodules: ''
+
+      - name: Checkout required submodules
+        run: |
+          git submodule update --init lib/micropython
+          cd lib/micropython; git submodule update --init lib/berkeley-db-1.xx lib/micropython-lib
+      
+      - name: Compile
+        uses: espressif/esp-idf-ci-action@v1
+        with:
+          esp_idf_version: v5.0.4
+          target: esp32s3
+          # path: 'boards/ESP32_S3_WROOM_1_N16R8'
+          path: ${{ env.BOARD_DIR }}
+          # command: 'make -C ../../lib/micropython/ports/esp32 submodules && idf.py build'
+          command: make -C ${{ env.PORT_DIR }} submodules && idf.py build
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.11'
+  
+      - name: LS
+        run: |
+            echo WORKSPACE ${{ github.workspace }}
+            echo BOARD_DIR ${{ env.BOARD_DIR }}
+            cd ${{ env.BOARD_DIR }}
+            ls -l
+            ls -l build/*.bin
+            python --version
+  
+      - name: Create images
+        run: |
+          cd ${{ env.BUILD_DIR }} && \
+          python ${{ env.PORT_DIR }}/makeimg.py \
+            sdkconfig \
+            bootloader/bootloader.bin \
+            partition_table/partition-table.bin \
+            micropython.bin \
+            firmware.bin \
+            micropython.uf2
+
+      - name: Release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          tag: ${{ github.ref_name }}
+        run: |
+          cd ${{ env.BUILD_DIR }} && \
+          gh release create "$tag" \
+              --repo="$GITHUB_REPOSITORY" \
+              --title="${GITHUB_REPOSITORY#*/} MicroPython $${{ env.BOARD }} ${tag#v}" \
+              --generate-notes \
+              micropython.bin \
+              firmware.bin \
+              micropython.uf2
+              
+      
+
