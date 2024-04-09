@@ -1,19 +1,11 @@
-MicroPython example boards
-==========================
+MicroPython example ESP32S3
+===========================
 
-This repository is an example of how to define custom MicroPython boards
-with custom Python and C modules.  The core MicroPython repository is a
-submodule and other code, including board definitions, is part of this
-repository.
+Fork of https://github.com/iot49/micropython-example-boards.git with the following additions:
 
-To set up MicroPython, check out the submodule and build `mpy-cross`:
+1. Custom ESP32**S3** board specification in `boards/ESP32_S3_WROOM_1_N16R8` with custom partition table `partions-S3-N16-custom.csv`. This configuration is particular to my needs, please modify to suit yours.
 
-    $ git submodule update --init lib/micropython
-    $ make -C lib/micropython/mpy-cross
+2. Added makefile. `$ make` compiles MicroPython locally (binaries in `boards/ESP32_S3_WROOM_1_N16R8/build`). This step requires that docker is installed.
 
-The various custom boards will require certain submodules of MicroPython
-itself.  These can be initialised via:
-
-    $ cd lib/micropython
-    $ git submodule update --init lib/stm32lib lib/berkeley-db-1.xx
-    $ cd ../..
+3. `github action`: pushing to the `main` branch starts a build on github.
+   

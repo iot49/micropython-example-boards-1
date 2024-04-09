@@ -1,0 +1,14 @@
+**/build/**
+boards/**/managed_components/**
+boards/**/dependencies.lock
+**/backup/**
+lib/micropython/**
+
+errors.md
+.DS_Store
+.vscode
+.coverage
+.venv/
+.pytest_cache/
+__pycache__/
+_build/
