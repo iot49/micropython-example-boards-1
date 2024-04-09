@@ -1,7 +1,6 @@
 **/build/**
 boards/**/managed_components/**
 boards/**/dependencies.lock
-src/freeze/**
 **/backup/**
 lib/micropython/**
 
