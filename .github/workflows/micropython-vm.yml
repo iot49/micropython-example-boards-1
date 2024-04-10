@@ -22,18 +22,15 @@ jobs:
         - name: Define env
           run: |
             echo "BOARD=${BOARD}" >> $GITHUB_ENV
-            echo "BOARD_DIR=boards/${{ env.BOARD }}" >> $GITHUB_ENV
-            echo "BUILD_DIR=boards/${{ env.BOARD }}/build" >> $GITHUB_ENV
-            echo "PORT_DIR=lib/micropython/ports/esp32" >> $GITHUB_ENV
             echo "FROZEN_MANIFEST=src/freeze/manifest.py" >> $GITHUB_ENV
             echo "USER_C_MODULES=src/modules/micropython.cmake" >> $GITHUB_ENV
+            echo "BUILD_DIR=lib/micropython/ports/esp32/build-${{ env.BOARD }}" >> $GITHUB_ENV
+            echo "PORT_DIR=lib/micropython/ports/esp32" >> $GITHUB_ENV
             echo "FIRMWARE_DIR=firmware/${{ env.BOARD }}/$(date +%Y%m%d-%H%M%S)" >> $GITHUB_ENV
 
-        - name: Use env
+        - name: Display env
           run: |
-            echo BOARD a=${BOARD}
-            echo BOARD b=${{ env.BOARD }}
-            echo BOARD_DIR=${{ env.BOARD_DIR }}
+            echo BOARD=${{ env.BOARD }}
             echo BUILD_DIR=${{ env.BUILD_DIR }}
             echo PORT_DIR=${{ env.PORT_DIR }}
             echo FIRWARE_DIR=${{ env.FIRMWARE_DIR }}
@@ -49,23 +46,23 @@ jobs:
         - name: Copy boards to PORT_DIR/boards
           run: |
             mkdir -p ${{ env.PORT_DIR }}/boards
-            cp -r ${{ env.BOARD_DIR }} ${{ env.PORT_DIR }}/boards
-            cp -a ${{ env.BOARD_DIR }} ${{ env.PORT_DIR }}/boards
-            ls -l ${{ env.PORT_DIR }}/boards
-            ls -l ${{ env.PORT_DIR }}/boards/${{ env.BOARD }}
+            cp -a boards/${{ env.BOARD }} ${{ env.PORT_DIR }}/boards
 
         - name: Compile
           uses: addnab/docker-run-action@v3
           with:
             image: espressif/idf:v5.0.4
             shell: bash
-            options: -v ${{ github.workspace }}:/project -w /project/${{ env.PORT_DIR }} -e BOARD=${{ env.BOARD }} -e FIRMWARE_DIR=${{ env.FIRMWARE_DIR }}
+            options: -v ${{ github.workspace }}:/project -w /project/${{ env.PORT_DIR }} \
+                -e BOARD=${{ env.BOARD }} \
+                -e FROZEN_MANIFEST=${{ env.FROZEN_MANIFEST }} \
+                -e USER_C_MODULES=${{ env.USER_C_MODULES }}
             run: |
                 . $IDF_PATH/export.sh
                 echo BOARD=${BOARD}
                 echo FIRMWARE_DIR=${FIRMWARE_DIR}
+                echo FROZEN_MANIFEST=${FROZEN_MANIFEST}
                 pwd
-                env
                 make -C /project/lib/micropython/mpy-cross
                 make BOARD=${BOARD} clean
                 make V=1 BOARD=${BOARD} \
@@ -73,7 +70,7 @@ jobs:
                     FROZEN_MANIFEST=/project/${FROZEN_MANIFEST}
                   
         - name: Release
-          # working-directory: ${BUILD_DIR}
+          working-directory: ${BUILD_DIR}
           env:
             GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
             tag: ${{ github.ref_name }}
@@ -82,9 +79,9 @@ jobs:
             ls -l
             gh release create "$tag" \
                 --repo="$GITHUB_REPOSITORY" \
-                --title="${GITHUB_REPOSITORY#*/} MicroPython ${BOARD} ${tag#v}" \
+                --title="${GITHUB_REPOSITORY#*/} MicroPython VM for ${BOARD} ${tag#v}" \
                 --generate-notes \
-                README.md
+                firmware.bin micropython.bin micropython.uf2
                 
           
     
