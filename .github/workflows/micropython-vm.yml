@@ -3,7 +3,7 @@ name: Compile MicroPython for boards/esp32_s3_wroom_1_n16r8.yml
 on:
   push:
     tags:
-      - '*'
+      - '**'
 
 env:
     BOARD: ESP32_S3
