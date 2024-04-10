@@ -41,22 +41,19 @@ jobs:
           shell: bash
           options: -v ${{ github.workspace }}:/project -w /project -e BOARD=ESP32_S3 -e BOARD_DIR=${BOARD_DIR} -e BUILD_DIR=${BUILD_DIR} -e PORT_DIR=${PORT_DIR}
           run: |
-              echo SHELL=${SHELL}
-              echo BOARD=$(BOARD)
-              echo BUILD_DIR=$(BUILD_DIR)
               make -C /project/lib/micropython/mpy-cross
-              cd /project/boards/$(BOARD_DIR)
+              cd /project/boards/ESP32_S3
               pwd
               idf.py build
-              cd /project/$(PORT_DIR) \
+              cd /project/lib/micropython/ports/esp32
               pwd
               python makeimg.py \
-                /project/$(BUILD_DIR)/sdkconfig \
-                /project/$(BUILD_DIR)/bootloader/bootloader.bin \
-                /project/$(BUILD_DIR)/partition_table/partition-table.bin \
-                /project/$(BUILD_DIR)/micropython.bin \
-                /project/$(BUILD_DIR)/firmware.bin \
-                /project/$(BUILD_DIR)/micropython.uf2
+                /project/boards/ESP32_S3/build/sdkconfig \
+                /project/boards/ESP32_S3/build/bootloader/bootloader.bin \
+                /project/boards/ESP32_S3/build/partition_table/partition-table.bin \
+                /project/boards/ESP32_S3/build/micropython.bin \
+                /project/boards/ESP32_S3/build/firmware.bin \
+                /project/boards/ESP32_S3/build/micropython.uf2
 
       - name: Release
         working-directory: ${{ env.BUILD_DIR }}
