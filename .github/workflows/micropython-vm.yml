@@ -56,6 +56,8 @@ jobs:
             GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
             tag: ${{ github.ref_name }}
           run: |
+            pwd
+            ls -l
             gh release create "$tag" \
                 --repo="$GITHUB_REPOSITORY" \
                 --title="${GITHUB_REPOSITORY#*/} MicroPython ${BOARD} ${tag#v}" \
