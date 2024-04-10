@@ -37,7 +37,7 @@ jobs:
         uses: addnab/docker-run-action@v3
         with:
           image: espressif/idf:v5.0.4
-          options: -v ${{ github.workspace }}:/project -w /project -e BOARD=${{ env.BOARD }} -e BOARD_DIR=${{ env.BOARD_DIR }} -e BUILD_DIR=${{ env.BUILD_DIR }} -e PORT_DIR=${{ env.PORT_DIR }}
+          options: -v ${{ github.workspace }}:/project -w /project -e BOARD=${BOARD} -e BOARD_DIR=${BOARD_DIR} -e BUILD_DIR=${BUILD_DIR} -e PORT_DIR=${PORT_DIR}
           run: |
               echo BOARD=$(BOARD)
               make -C /project/lib/micropython/mpy-cross
@@ -52,7 +52,7 @@ jobs:
                 /project/$(BUILD_DIR)/partition_table/partition-table.bin \
                 /project/$(BUILD_DIR)/micropython.bin \
                 /project/$(BUILD_DIR)/firmware.bin \
-                /project/$(BUILD_DIR)/micropython.uf2"
+                /project/$(BUILD_DIR)/micropython.uf2
 
       - name: Release
         working-directory: ${{ env.BUILD_DIR }}
