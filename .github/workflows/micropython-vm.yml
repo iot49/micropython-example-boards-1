@@ -6,7 +6,7 @@ on:
       - 'vm-**'
 
 env:
-    BOARD: ESP32_S3
+    BOARD: ESP32_S3_N16R8
 
 
 
@@ -27,7 +27,7 @@ jobs:
             echo "PORT_DIR=lib/micropython/ports/esp32" >> $GITHUB_ENV
             echo "FROZEN_MANIFEST=src/freeze/manifest.py" >> $GITHUB_ENV
             echo "USER_C_MODULES=src/modules/micropython.cmake" >> $GITHUB_ENV
-            echo "FIRMWARE_DIR=firmware/${{ env.BOARD }}/$(shell date +%Y%m%d-%H%M%S)" >> $GITHUB_ENV
+            echo "FIRMWARE_DIR=firmware/${{ env.BOARD }}/$(date +%Y%m%d-%H%M%S)" >> $GITHUB_ENV
 
         - name: Use env
           run: |
@@ -51,6 +51,8 @@ jobs:
             mkdir -p ${{ env.PORT_DIR }}/boards
             cp -r ${{ env.BOARD_DIR }} ${{ env.PORT_DIR }}/boards
             cp -a ${{ env.BOARD_DIR }} ${{ env.PORT_DIR }}/boards
+            ls -l ${{ env.PORT_DIR }}/boards
+            ls -l ${{ env.PORT_DIR }}/boards/${{ env.BOARD }}
 
         - name: Compile
           uses: addnab/docker-run-action@v3
