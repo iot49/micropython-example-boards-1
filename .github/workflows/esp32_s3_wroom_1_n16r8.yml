@@ -41,16 +41,16 @@ jobs:
           esp_idf_version: v5.0.4
           target: esp32s3
           path: ${{ env.BOARD_DIR }}
-          command: 'make -C ../../lib/micropython/ports/esp32 submodules; \
-            ls -l; \
-            pwd; \
-            which python; \
-            which python3; \
-            idf.py build; \
-            cd ../../lib/micropython/ports/esp32; \
-            pwd; \
-            which python; \
-            which python3; \
+          command: 'make -C ../../lib/micropython/ports/esp32 submodules && \
+            ls -l && \
+            pwd && \
+            which python && \
+            which python3 && \
+            idf.py build && \
+            cd ../../lib/micropython/ports/esp32 && \
+            pwd && \
+            which python && \
+            which python3 && \
             python makeimg.py \
                 $(BUILD)/sdkconfig \
                 $(BUILD)/bootloader/bootloader.bin \
