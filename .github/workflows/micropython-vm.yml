@@ -54,7 +54,9 @@ jobs:
           uses: addnab/docker-run-action@v3
           with:
             image: espressif/idf:v5.0.4
-            options: -v ${{ github.workspace }}:/project -w /project/${{ env.PORT_DIR }} -e BOARD=${{ env.BOARD }} -e USER_C_MODULES=/project/${{ env.USER_C_MODULES }} -e FROZEN_MANIFEST=/project/${{ env.FROZEN_MANIFEST }} 
+            # FAILS:
+            # -e FROZEN_MANIFEST=/project/${{ env.FROZEN_MANIFEST }} 
+            options: -v ${{ github.workspace }}:/project -w /project/${{ env.PORT_DIR }} -e BOARD=${{ env.BOARD }} -e USER_C_MODULES=/project/${{ env.USER_C_MODULES }} 
             run: |
                 . $IDF_PATH/export.sh
                 make -C /project/lib/micropython/mpy-cross
