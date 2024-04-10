@@ -1,0 +1,14 @@
+curl -L \
+  -H "Accept: application/vnd.github+json" \
+  -H "X-GitHub-Api-Version: 2022-11-28" \
+  https://api.github.com/repos/iot49/micropython-example-boards-1/releases
+
+curl -L \
+  -H "Accept: application/vnd.github+json" \
+  -H "X-GitHub-Api-Version: 2022-11-28" \
+  https://api.github.com/repos/iot49/micropython-example-boards-1/releases/latest
+
+curl -L \
+  -H "Accept: application/vnd.github+json" \
+  -H "X-GitHub-Api-Version: 2022-11-28" \
+  https://api.github.com/repos/iot49/micropython-example-boards-1/releases/tags/v1.2.3/rc5

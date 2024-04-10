@@ -1,11 +1,8 @@
-**/build/**
-boards/**/managed_components/**
-boards/**/dependencies.lock
+firmware/**
 **/backup/**
 lib/micropython/**
 lib/micropython/*
 
-errors.md
 .DS_Store
 .vscode
 .coverage
