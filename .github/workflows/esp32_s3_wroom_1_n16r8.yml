@@ -39,7 +39,7 @@ jobs:
         uses: addnab/docker-run-action@v3
         with:
           image: espressif/idf:v5.0.4
-          options: -v ${{ github.workspace }}:/project -w /project
+          options: -v ${{ github.workspace }}:/project -w /project -e BOARD=${{ env.BOARD }} -e BOARD_DIR=${{ env.BOARD_DIR }} -e BUILD_DIR=${{ env.BUILD_DIR }} -e PORT_DIR=${{ env.PORT_DIR }}
           run: |
             bash -c " \
               make -C /project/lib/micropython/mpy-cross; \
