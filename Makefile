@@ -12,6 +12,7 @@ build: dependencies # clean
 		-v .:/project \
 		-w /project espressif/idf:v5.0.4 \
 		bash -c " \
+			echo SHELL=${SHELL}; \
 			make -C lib/micropython/mpy-cross; \
 			cd /project/$(BOARD_DIR); \
 			idf.py build; \
