@@ -16,8 +16,8 @@ jobs:
   
       env:
         BOARD: ESP32_S3
-        BOARD_DIR: boards/${BOARD}
-        BUILD_DIR: boards/${BOARD}/build
+        BOARD_DIR: boards/ESP32_S3
+        BUILD_DIR: boards/ESP32_S3/build
         PORT_DIR: lib/micropython/ports/esp32
   
       steps:
@@ -30,7 +30,6 @@ jobs:
 
       - name: Checkout required submodules
         run: |
-          echo BOARD=${BOARD}
           git submodule update --init lib/micropython
           cd lib/micropython; git submodule update --init lib/berkeley-db-1.xx lib/micropython-lib
       
