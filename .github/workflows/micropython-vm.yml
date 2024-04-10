@@ -24,9 +24,12 @@ jobs:
         - name: env
           run: |
             echo "BOARD=${BOARD}" >> $GITHUB_ENV
-            echo "BOARD_DIR=boards/${BOARD}" >> $GITHUB_ENV
-            echo "BUILD_DIR=${BOARD_DIR}/build" >> $GITHUB_ENV
+            echo "BOARD_DIR=boards/${{ env.BOARD }}" >> $GITHUB_ENV
+            echo "BUILD_DIR=${{ env.BOARD_DIR }}/build" >> $GITHUB_ENV
             echo "PORT_DIR=lib/micropython/ports/esp32" >> $GITHUB_ENV
+
+        - name: Use env
+          run: |
             echo BOARD a=${BOARD}
             echo BOARD b=${{ env.BOARD }}
             echo BOARD_DIR ${{ env.BOARD_DIR }}
