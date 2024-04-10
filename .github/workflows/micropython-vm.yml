@@ -9,9 +9,7 @@ on:
 
 env:
     BOARD: ESP32_S3
-    BOARD_DIR: boards/${BOARD}
-    BUILD_DIR: ${BOARD_DIR}/build
-    PORT_DIR: lib/micropython/ports/esp32
+
 
 
 permissions:
@@ -25,10 +23,13 @@ jobs:
 
         - name: env
           run: |
-            echo BOARD=${BOARD}
-            echo BOARD_DIR=${BOARD_DIR}
-            echo BUILD_DIR=${BUILD_DIR}
-            echo PORT_DIR=${PORT_DIR}
-            env
-            pwd
+            echo "BOARD=${BOARD}" >> $GITHUB_ENV
+            echo "BOARD_DIR=boards/${BOARD}" >> $GITHUB_ENV
+            echo "BUILD_DIR=${BOARD_DIR}/build" >> $GITHUB_ENV
+            echo "PORT_DIR=lib/micropython/ports/esp32" >> $GITHUB_ENV
+            echo BOARD a=${BOARD}
+            echo BOARD b=${{ env.BOARD }}
+            echo BOARD_DIR ${{ env.BOARD_DIR }}
+            echo BUILD_DIR ${{ env.BUILD_DIR }}
+            echo PORT_DIR ${{ env.PORT_DIR }}
 
