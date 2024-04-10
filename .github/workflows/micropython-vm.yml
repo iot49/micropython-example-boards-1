@@ -2,8 +2,6 @@ name: Compile MicroPython for boards/esp32_s3_wroom_1_n16r8.yml
 
 on:
   push:
-    branches:
-      - main
     tags:
       - '*'
 
@@ -21,7 +19,7 @@ jobs:
   
       steps:
 
-        - name: env
+        - name: Define env
           run: |
             echo "BOARD=${BOARD}" >> $GITHUB_ENV
             echo "BOARD_DIR=boards/${{ env.BOARD }}" >> $GITHUB_ENV
@@ -36,3 +34,31 @@ jobs:
             echo BUILD_DIR=${{ env.BUILD_DIR }}
             echo PORT_DIR=${{ env.PORT_DIR }}
 
+        - name: Release
+          uses: actions/create-release@v1
+          id: create_release
+          env:
+            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          with:
+            tag_name: ${{ github.ref }}
+            release_name: Release ${{ github.ref }}
+            body: |
+              Changes in this Release
+            draft: false
+            prerelease: false
+
+        - name: Release
+          working-directory: ${BUILD_DIR}
+          env:
+            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+            tag: ${{ github.ref_name }}
+          run: |
+            echo "Building MicroPython for ${BOARD}" > test.txt
+            gh release create "$tag" \
+                --repo="$GITHUB_REPOSITORY" \
+                --title="${GITHUB_REPOSITORY#*/} MicroPython ${BOARD} ${tag#v}" \
+                --generate-notes \
+                test.txt
+                
+          
+    
