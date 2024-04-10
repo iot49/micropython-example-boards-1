@@ -59,14 +59,15 @@ jobs:
             run: |
                 . $IDF_PATH/export.sh
                 echo BOARD=${BOARD}
-                echo FIRMWARE_DIR=${FIRMWARE_DIR}
+                echo USER_C_MODULES=${USER_C_MODULES}
                 echo FROZEN_MANIFEST=${FROZEN_MANIFEST}
                 pwd
+                ls -l /project/${USER_C_MODULES}
+                ls -l /project/${FROZEN_MANIFEST}
                 make -C /project/lib/micropython/mpy-cross
-                make BOARD=${BOARD} clean
-                make V=1 BOARD=${BOARD} \
-                    USER_C_MODULES=/project/${USER_C_MODULES} \
-                    FROZEN_MANIFEST=/project/${FROZEN_MANIFEST}
+                make V=1 BOARD=${BOARD} 
+                #    USER_C_MODULES=/project/${USER_C_MODULES} \
+                #    FROZEN_MANIFEST=/project/${FROZEN_MANIFEST}
                   
         - name: Release
           working-directory: ${BUILD_DIR}
