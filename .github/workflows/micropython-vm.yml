@@ -55,13 +55,13 @@ jobs:
           with:
             image: espressif/idf:v5.0.4
             shell: bash
-            # -e FROZEN_MANIFEST=/project/${{ env.FROZEN_MANIFEST }} -e USER_C_MODULES=/project/${{ env.USER_C_MODULES }}
-            options: -v ${{ github.workspace }}:/project -w /project/${{ env.PORT_DIR }} -e BOARD=${{ env.BOARD }} 
+            # -e FROZEN_MANIFEST=/project/${{ env.FROZEN_MANIFEST }} 
+            options: -v ${{ github.workspace }}:/project -w /project/${{ env.PORT_DIR }} -e BOARD=${{ env.BOARD }} -e USER_C_MODULES=/project/${{ env.USER_C_MODULES }}
             run: |
                 . $IDF_PATH/export.sh
                 make -C /project/lib/micropython/mpy-cross
                 make V=1 BOARD=${BOARD} 
-                cat build-${BOARD}/logs/*.log
+                # cat build-${BOARD}/log/*.log
                   
         - name: Release
           working-directory: ${BUILD_DIR}
