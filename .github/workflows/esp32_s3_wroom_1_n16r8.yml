@@ -30,6 +30,8 @@ jobs:
 
       - name: Checkout required submodules
         run: |
+          echo workspace ${{ github.workspace }}
+          ls -l ${{ github.workspace }}
           git submodule update --init lib/micropython
           cd lib/micropython; git submodule update --init lib/berkeley-db-1.xx lib/micropython-lib
       
@@ -37,7 +39,7 @@ jobs:
         uses: addnab/docker-run-action@v3
         with:
           image: espressif/idf:v5.0.4
-          options: -v .:/project -w /project
+          options: -v ${{ github.workspace }}:/project -w /project
           run: |
             bash -c " \
               make -C /project/lib/micropython/mpy-cross; \
