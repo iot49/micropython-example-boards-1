@@ -47,18 +47,20 @@ jobs:
             draft: false
             prerelease: false
 
+        - name: Checkout
+          uses: actions/checkout@v4
+
         - name: Release
           working-directory: ${BUILD_DIR}
           env:
             GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
             tag: ${{ github.ref_name }}
           run: |
-            echo "Building MicroPython for ${BOARD}" > test.txt
             gh release create "$tag" \
                 --repo="$GITHUB_REPOSITORY" \
                 --title="${GITHUB_REPOSITORY#*/} MicroPython ${BOARD} ${tag#v}" \
                 --generate-notes \
-                test.txt
+                README.md
                 
           
     
