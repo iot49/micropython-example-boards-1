@@ -41,6 +41,7 @@ jobs:
           shell: bash
           options: -v ${{ github.workspace }}:/project -w /project -e BOARD=ESP32_S3 -e BOARD_DIR=${BOARD_DIR} -e BUILD_DIR=${BUILD_DIR} -e PORT_DIR=${PORT_DIR}
           run: |
+              . $IDF_PATH/export.sh
               make -C /project/lib/micropython/mpy-cross
               cd /project/boards/ESP32_S3
               pwd
