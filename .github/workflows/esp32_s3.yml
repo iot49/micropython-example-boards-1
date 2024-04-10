@@ -42,6 +42,7 @@ jobs:
           options: -v ${{ github.workspace }}:/project -w /project -e BOARD=ESP32_S3 -e BOARD_DIR=${BOARD_DIR} -e BUILD_DIR=${BUILD_DIR} -e PORT_DIR=${PORT_DIR}
           run: |
               . $IDF_PATH/export.sh
+              env
               make -C /project/lib/micropython/mpy-cross
               cd /project/boards/ESP32_S3
               pwd
@@ -55,17 +56,20 @@ jobs:
                 /project/boards/ESP32_S3/build/micropython.bin \
                 /project/boards/ESP32_S3/build/firmware.bin \
                 /project/boards/ESP32_S3/build/micropython.uf2
+              ls -l /project/boards/ESP32_S3/build/*.bin /project/boards/ESP32_S3/build/*.uf2
 
       - name: Release
-        working-directory: ${{ env.BUILD_DIR }}
+        working-directory: ${BUILD_DIR}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           tag: ${{ github.ref_name }}
         run: |
-          cd ${{ env.BUILD_DIR }} && \
+          cd ${BUILD_DIR}
+          pwd
+          ls -l *bin *uf2
           gh release create "$tag" \
               --repo="$GITHUB_REPOSITORY" \
-              --title="${GITHUB_REPOSITORY#*/} MicroPython $${{ env.BOARD }} ${tag#v}" \
+              --title="${GITHUB_REPOSITORY#*/} MicroPython ${BOARD} ${tag#v}" \
               --generate-notes \
               micropython.bin \
               firmware.bin \
