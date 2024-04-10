@@ -37,6 +37,21 @@ jobs:
         - name: Checkout
           uses: actions/checkout@v4
 
+        - name: Checkout required submodules
+          run: |
+            git submodule update --init lib/micropython
+            cd lib/micropython; git submodule update --init lib/berkeley-db-1.xx lib/micropython-lib
+
+        - name: Copy boards to PORT_DIR/boards
+          run: |
+            mkdir -p ${{ env.PORT_DIR }}/boards
+            cp -r ${{ env.BOARD_DIR }} ${{ env.PORT_DIR }}/boards
+            cp -a ${{ env.BOARD_DIR }} ${{ env.PORT_DIR }}/boards
+            cd ${{ env.PORT_DIR }}/boards
+            ls -l
+            cd ${{ env.BOARD }}
+            ls -l
+        
         - name: Release
           # working-directory: ${BUILD_DIR}
           env:
