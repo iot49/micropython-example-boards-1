@@ -1,8 +1,8 @@
 # board specifiation (in boards/ directory)
-BOARD=ESP32_S3_WROOM_1_N16R8
+BOARD=ESP32_S3
 
 BOARD_DIR=boards/$(BOARD)
-BUILD=/project/boards/ESP32_S3_WROOM_1_N16R8/build
+BUILD=/project/boards/ESP32_S3/build
 
 
 .PHONY: build dependencies clean

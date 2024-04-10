@@ -9,7 +9,7 @@ set(SDKCONFIG_DEFAULTS
     ${MICROPY_PORT_DIR}/boards/sdkconfig.240mhz
     ${MICROPY_PORT_DIR}/boards/sdkconfig.spiram_sx
     ${MICROPY_PORT_DIR}/boards/sdkconfig.spiram_oct
-    ${PROJECT_DIR}/boards/ESP32_S3_WROOM_1_N16R8/sdkconfig.board
+    ${PROJECT_DIR}/boards/ESP32_S3/sdkconfig.board
 )
 
 # Set the user C modules to include in the build.

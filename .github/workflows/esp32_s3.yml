@@ -15,7 +15,7 @@ jobs:
       runs-on: ubuntu-latest
   
       env:
-        BOARD: ESP32_S3_WROOM_1_N16R8
+        BOARD: ESP32_S3
         BOARD_DIR: boards/${BOARD}
         BUILD_DIR: boards/${BOARD}/build
         PORT_DIR: lib/micropython/ports/esp32
@@ -30,8 +30,6 @@ jobs:
 
       - name: Checkout required submodules
         run: |
-          echo workspace ${{ github.workspace }}
-          ls -l ${{ github.workspace }}
           git submodule update --init lib/micropython
           cd lib/micropython; git submodule update --init lib/berkeley-db-1.xx lib/micropython-lib
       
@@ -41,11 +39,13 @@ jobs:
           image: espressif/idf:v5.0.4
           options: -v ${{ github.workspace }}:/project -w /project -e BOARD=${{ env.BOARD }} -e BOARD_DIR=${{ env.BOARD_DIR }} -e BUILD_DIR=${{ env.BUILD_DIR }} -e PORT_DIR=${{ env.PORT_DIR }}
           run: |
-            bash -c " \
-              make -C /project/lib/micropython/mpy-cross; \
-              cd /project/$(BOARD_DIR); \
-              idf.py build; \
-              cd /project/$(PORT_DIR); \
+              echo BOARD=$(BOARD)
+              make -C /project/lib/micropython/mpy-cross
+              cd /project/boards/$(BOARD_DIR)
+              pwd
+              idf.py build
+              cd /project/$(PORT_DIR) \
+              pwd
               python makeimg.py \
                 /project/$(BUILD_DIR)/sdkconfig \
                 /project/$(BUILD_DIR)/bootloader/bootloader.bin \
