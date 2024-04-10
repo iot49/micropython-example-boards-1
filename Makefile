@@ -1,38 +1,34 @@
-# board specifiation (in boards/ directory)
-BOARD=ESP32_S3
+# board to build (in ./boards folder)
+BOARD=ESP32_S3_N16R8
 
-BOARD_DIR=boards/$(BOARD)
-BUILD=/project/boards/ESP32_S3/build
+FROZEN_MANIFEST=src/freeze/manifest.py
+USER_C_MODULES=src/modules/micropython.cmake
+PORT_DIR=lib/micropython/ports/esp32
+BUILD_DIR=${PORT_DIR}/build-${BOARD}
+FIRMWARE_DIR=firmware/${BOARD}/$(shell date +%Y%m%d-%H%M%S)
 
 
-.PHONY: build dependencies clean
+.PHONY: build dependencies
 
-build: dependencies # clean
+build: dependencies
 	docker run --rm \
-		-v .:/project \
-		-w /project espressif/idf:v5.0.4 \
+		-v .:/project -w /project/lib/micropython \
+		espressif/idf:v5.0.4 \
 		bash -c " \
-			echo SHELL=${SHELL}; \
-			make -C lib/micropython/mpy-cross; \
-			cd /project/$(BOARD_DIR); \
-			idf.py build; \
-			cd /project/lib/micropython/ports/esp32; \
-			python makeimg.py \
-				$(BUILD)/sdkconfig \
-				$(BUILD)/bootloader/bootloader.bin \
-				$(BUILD)/partition_table/partition-table.bin \
-				$(BUILD)/micropython.bin \
-				$(BUILD)/firmware.bin \
-				$(BUILD)/micropython.uf2 \
-			"
-
+			make -C mpy-cross; \
+			cd ports/esp32; \
+			make submodules; \
+			make BOARD=${BOARD} clean; \
+			make V=1 \
+				BOARD=${BOARD} \
+				USER_C_MODULES=/project/${USER_C_MODULES} \
+				FROZEN_MANIFEST=/project/${FROZEN_MANIFEST}"
+	@echo Copied compiled firmware is in ${FIRMWARE_DIR}
+	mkdir -p ${FIRMWARE_DIR}
+	cp ${BUILD_DIR}/{firmware.bin,micropython.bin,micropython.uf2} ${FIRMWARE_DIR}
 
 dependencies:
 	git submodule update --init lib/micropython
-	make -C lib/micropython/ports/esp32 submodules
+	make -C ${PORT_DIR} submodules
 	cd lib/micropython; git submodule update --init lib/berkeley-db-1.xx lib/micropython-lib
-
-
-clean:
-	rm -rf $(BOARD_DIR)/build
-	rm -rf $(BOARD_DIR)/managed_components
+	cp -a boards $(PORT_DIR)
