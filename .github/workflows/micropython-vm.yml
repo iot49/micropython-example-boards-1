@@ -1,4 +1,4 @@
-name: Compile MicroPython for boards/esp32_s3_wroom_1_n16r8.yml
+name: Compile MicroPython for boards/esp32_s3
 
 on:
   push:
@@ -33,19 +33,6 @@ jobs:
             echo BOARD_DIR=${{ env.BOARD_DIR }}
             echo BUILD_DIR=${{ env.BUILD_DIR }}
             echo PORT_DIR=${{ env.PORT_DIR }}
-
-        - name: Release
-          uses: actions/create-release@v1
-          id: create_release
-          env:
-            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          with:
-            tag_name: ${{ github.ref }}
-            release_name: Release ${{ github.ref }}
-            body: |
-              Changes in this Release
-            draft: false
-            prerelease: false
 
         - name: Checkout
           uses: actions/checkout@v4
