@@ -3,6 +3,7 @@ boards/**/managed_components/**
 boards/**/dependencies.lock
 **/backup/**
 lib/micropython/**
+lib/micropython/*
 
 errors.md
 .DS_Store
